@@ -6,19 +6,15 @@
 </head>
 <body>
   <form class="js-bureaucrat-form" data-trigger="live">
-    <div class="js-bureaucrat-wrapper">
-      <input class="js-bureaucrat-field" type="text">
-    </div>
-    <div class="js-bureaucrat-wrapper">
-      <button class="js-bureaucrat-submit" type="submit">submit</button>
-    </div>
+    <input class="js-bureaucrat-field" type="text" data-rules='{"required": "true"}'>
+    <button class="js-bureaucrat-submit" type="submit">submit</button>
   </form>
 
   <script src="../src/bureaucrat.js"></script>
   <script>
-    var forms = document.querySelector('.js-bureaucrat-form');
-    var bureaucrat = new Bureaucrat(forms);
-    console.log('new Bureaucrat', bureaucrat);
+    var form = document.querySelector('.js-bureaucrat-form');
+    var bureaucrat = new Bureaucrat(form);
+    console.log('instance', bureaucrat);
   </script>
 </body>
 </html>
