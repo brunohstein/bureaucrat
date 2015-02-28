@@ -1,0 +1,22 @@
+{
+  "name": "bureaucrat",
+  "version": "0.0.0",
+  "description": "Easy form validation.",
+  "main": "src/bureaucrat.js",
+  "keywords": [
+    "form",
+    "validation"
+  ],
+  "authors": [
+    "Bruno Henrique Stein"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
