@@ -5,6 +5,20 @@
   <link rel="stylesheet" href="stylesheets/index.css">
 </head>
 <body>
+  <form class="js-bureaucrat-form" data-trigger="live">
+    <div class="js-bureaucrat-wrapper">
+      <input class="js-bureaucrat-field" type="text">
+    </div>
+    <div class="js-bureaucrat-wrapper">
+      <button class="js-bureaucrat-submit" type="submit">submit</button>
+    </div>
+  </form>
+
   <script src="../src/bureaucrat.js"></script>
+  <script>
+    var forms = document.querySelector('.js-bureaucrat-form');
+    var bureaucrat = new Bureaucrat(forms);
+    console.log('new Bureaucrat', bureaucrat);
+  </script>
 </body>
 </html>
