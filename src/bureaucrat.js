@@ -74,16 +74,12 @@
       triggers[this.options.trigger]();
 
       this.elements.form.addEventListener('test', function(e) {
-        var keys = Object.keys(e.detail);
+        var index = _this.errors.indexOf(e.detail.name);
 
-        for (var i = 0; i < keys.length; i++) {
-          var index = _this.errors.indexOf(keys[i]);
-
-          if (e.detail[keys[i]].length > 0) {
-            if (index === -1) _this.errors.push(keys[i]);
-          } else {
-            if (index > -1) _this.errors.splice(index, 1);
-          }
+        if (e.detail.isValid) {
+          if (index > -1) _this.errors.splice(index, 1);
+        } else {
+          if (index === -1) _this.errors.push(e.detail.name);
         }
 
         if (_this.errors.length === 0)
@@ -166,21 +162,34 @@
         }
       };
 
-      var keys = Object.keys(this.options.rules);
+      var error;
 
-      for (var i = 0; i < keys.length; i++) {
-        var index = this.errors.indexOf(keys[i]);
+      for (error in this.options.rules) {
+        var index = this.errors.indexOf(error);
 
-        if (validations[keys[i]](this.options.rules[keys[i]])) {
-          if (index > -1) this.errors.splice(index, 1);
+        if (validations[error](this.options.rules[error])) {
+          if (index > -1) this.removeError(error);
         } else {
-          if (index === -1) this.errors.push(keys[i]);
+          if (index === -1) this.addError(error);
         }
       }
 
-      var name = this.name;
+      this.trigger('test', {name: this.name, isValid: this.errors.length === 0});
+    },
+    removeError: function(error) {
+      var index = this.errors.indexOf(error);
+      this.errors.splice(index, 1);
 
-      this.trigger('test', {name: this.errors});
+      // if (this.errors.length === 0)
+      //   this.elements.message.display = 'none';
+      // else
+      //   this.elements.message.display = 'block';
+    },
+    addError: function(error) {
+      var index = this.errors.indexOf(error);
+      this.errors.push(error);
+
+      // this.elements.message.display = 'block';
     },
     trigger: function(name, data) {
       if (!data) data = {}
