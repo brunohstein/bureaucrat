@@ -11,6 +11,8 @@
   'use strict';
 
   var Form = function(element) {
+    this.messages = FormMessages;
+
     this.elements = {
       form: element
     };
@@ -36,7 +38,7 @@
       var fields = this.elements.form.querySelectorAll(this.options.fieldSelector);
 
       for (var i = 0; i < fields.length; i++) {
-        this.fields.push(new Field(this.elements.form, fields[i]));
+        this.fields.push(new Field(this, fields[i]));
       }
 
       var triggers = {
@@ -48,23 +50,38 @@
         },
         blur: function() {
           for (var i = 0; i < _this.fields.length; i++) {
-            var field = _this.fields[i];
+            _this.fields[i].elements.field.addEventListener('blur', function(e) {
+              var field;
 
-            field.elements.field.addEventListener('blur', function(e) {
+              _this.fields.some(function(object) {
+                if (object.name === e.target.getAttribute('name')) field = object;
+              });
+
               _this.testOne(field);
             });
           }
         },
         live: function() {
           for (var i = 0; i < _this.fields.length; i++) {
-            var field = _this.fields[i];
-
-            field.elements.field.addEventListener('keyup', function(e) {
+            _this.fields[i].elements.field.addEventListener('keyup', function(e) {
               if (e.keyCode == 9) e.preventDefault();
+
+              var field;
+
+              _this.fields.some(function(object) {
+                if (object.name === e.target.getAttribute('name')) field = object;
+              });
+
               _this.testOne(field);
             });
 
-            field.elements.field.addEventListener('change', function(e) {
+            _this.fields[i].elements.field.addEventListener('change', function(e) {
+              var field;
+
+              _this.fields.some(function(object) {
+                if (object.name === e.target.getAttribute('name')) field = object;
+              });
+
               _this.testOne(field);
             });
           }
@@ -109,7 +126,7 @@
       this.elements.submit.removeAttribute('disabled');
     },
     disableSubmit: function() {
-      this.elements.submit.setAttribute('disabled');
+      this.elements.submit.setAttribute('disabled', true);
     },
     testOne: function(field) {
       field.test();
@@ -120,13 +137,16 @@
   };
 
   var Field = function(form, element) {
+    this.form = form;
+
     this.elements = {
-      form: form,
+      form: this.form.elements.form,
       field: element
     };
 
     this.options = {
       wrapperClass: this.elements.field.getAttribute('data-wrapper-class') || '',
+      messageClass: this.elements.field.getAttribute('data-message-class') || '',
       rules: JSON.parse(this.elements.field.getAttribute('data-rules')) || {}
     };
 
@@ -139,26 +159,42 @@
 
   Field.prototype = {
     init: function() {
-      this.wrap(this.elements.field, 'div', this.elements.field);
-    },
-    wrap: function(element, wrapper, wrapperClass) {
-      var element = element;
-      var wrapper = document.createElement(wrapper);
+      this.elements.wrapper = document.createElement('div');
+      this.elements.wrapper.appendChild(this.elements.field.parentNode.replaceChild(this.elements.wrapper, this.elements.field));
+      this.elements.wrapper.className = this.options.wrapperClass;
 
-      wrapper.appendChild(element.parentNode.replaceChild(wrapper, element));
-      wrapper.className = wrapperClass;
+      this.elements.message = document.createElement('div');
+      this.elements.message.style.display = 'none';
+      this.elements.message.className = this.options.messageClass;
 
-      return wrapper;
+      this.elements.wrapper.appendChild(this.elements.message);
     },
     isValid: function() {
       return this.errors.length === 0;
     },
     test: function() {
+      var _this = this;
       var value = this.elements.field.value;
 
       var validations = {
         required: function(requirement) {
           return value !== '' && value !== undefined && value !== null ? true : false;
+        },
+        minlength: function(requirement) {
+          return value.length >= requirement ? true : false;
+        },
+        maxlength: function(requirement) {
+          return value.length <= requirement ? true : false;
+        },
+        greater: function(requirement) {
+          return value > requirement ? true : false;
+        },
+        lower: function(requirement) {
+          return value < requirement ? true : false;
+        },
+        equalField: function(requirement) {
+          var matchField = _this.elements.form.querySelector('[name=' + requirement + ']');
+          return matchField.value === value ? true : false;
         }
       };
 
@@ -180,16 +216,20 @@
       var index = this.errors.indexOf(error);
       this.errors.splice(index, 1);
 
-      // if (this.errors.length === 0)
-      //   this.elements.message.display = 'none';
-      // else
-      //   this.elements.message.display = 'block';
+      if (this.errors.length === 0)
+        this.elements.message.style.display = 'none';
+      else
+        this.elements.message.style.display = 'block';
     },
     addError: function(error) {
       var index = this.errors.indexOf(error);
       this.errors.push(error);
 
-      // this.elements.message.display = 'block';
+      this.elements.message.innerHTML = this.getMessage(error);
+      this.elements.message.style.display = 'block';
+    },
+    getMessage: function(error) {
+      return this.form.messages[error](this.options.rules[error]);
     },
     trigger: function(name, data) {
       if (!data) data = {}

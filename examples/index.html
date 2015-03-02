@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <title>bureaucrat.js</title>
   <link rel="stylesheet" href="stylesheets/index.css">
 </head>
 <body>
   <form class="js-bureaucrat-form" data-trigger="live">
-    <input class="js-bureaucrat-field" name="email" type="email" data-rules='{"required": "true"}'>
+    <input class="js-bureaucrat-field" name="name" type="text" data-rules='{"required": "true", "minlength": 6}' placeholder="name">
+    <input class="js-bureaucrat-field" name="age" type="number" data-rules='{"greater": 18, "lower": 60}' placeholder="age">
+    <input class="js-bureaucrat-field" name="email" type="email" data-rules='{"required": "true", "minlength": 6}' placeholder="email">
+    <input class="js-bureaucrat-field" name="repeat_email" type="email" data-rules='{"required": "true", "equalField": "email"}' placeholder="repeat email">
     <button class="js-bureaucrat-submit" type="submit" disabled>submit</button>
   </form>
 
+  <script src="../src/bureaucrat-messages.pt-br.js"></script>
   <script src="../src/bureaucrat.js"></script>
   <script>
     var form = document.querySelector('.js-bureaucrat-form');
