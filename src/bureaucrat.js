@@ -11,7 +11,7 @@
   'use strict';
 
   var Form = function(element) {
-    this.messages = FormMessages;
+    this.messages = BureaucratMessages;
 
     this.elements = {
       form: element
@@ -37,6 +37,16 @@
       var _this = this;
       var fields = this.elements.form.querySelectorAll(this.options.fieldSelector);
 
+      this.elements.form.addEventListener('test', function(e) {
+        var index = _this.errors.indexOf(e.detail.name);
+
+        if (e.detail.isValid) {
+          if (index > -1) _this.errors.splice(index, 1);
+        } else {
+          if (index === -1) _this.errors.push(e.detail.name);
+        }
+      });
+
       for (var i = 0; i < fields.length; i++) {
         this.fields.push(new Field(this, fields[i]));
       }
@@ -60,6 +70,10 @@
               _this.testOne(field);
             });
           }
+
+          _this.elements.form.addEventListener('test', function() {
+            _this.setSubmit();
+          });
         },
         live: function() {
           for (var i = 0; i < _this.fields.length; i++) {
@@ -85,25 +99,14 @@
               _this.testOne(field);
             });
           }
+
+          _this.elements.form.addEventListener('test', function() {
+            _this.setSubmit();
+          });
         }
       };
 
       triggers[this.options.trigger]();
-
-      this.elements.form.addEventListener('test', function(e) {
-        var index = _this.errors.indexOf(e.detail.name);
-
-        if (e.detail.isValid) {
-          if (index > -1) _this.errors.splice(index, 1);
-        } else {
-          if (index === -1) _this.errors.push(e.detail.name);
-        }
-
-        if (_this.errors.length === 0)
-          _this.enableSubmit();
-        else
-          _this.disableSubmit();
-      });
     },
     destroy: function() {
       var _this = this;
@@ -122,17 +125,30 @@
 
       triggers[this.options.trigger]();
     },
-    enableSubmit: function() {
-      this.elements.submit.removeAttribute('disabled');
-    },
-    disableSubmit: function() {
-      this.elements.submit.setAttribute('disabled', true);
+    setSubmit: function() {
+      if (this.errors.length === 0)
+        this.elements.submit.removeAttribute('disabled');
+      else
+        this.elements.submit.setAttribute('disabled', true);
     },
     testOne: function(field) {
       field.test();
+      field.feedback();
     },
     testAll: function() {
+      for (var i = 0; i < this.fields.length; i++) {
+        this.fields[i].test();
+        this.fields[i].feedback();
+      }
+    },
+    isValid: function() {
+      var isValid = true;
 
+      for (var i = 0; i < this.fields.length; i++) {
+        isValid = this.fields[i].isValid();
+      }
+
+      return isValid;
     }
   };
 
@@ -168,8 +184,14 @@
       this.elements.message.className = this.options.messageClass;
 
       this.elements.wrapper.appendChild(this.elements.message);
+
+      if (this.options.rules.required) {
+        this.errors.push('required');
+        this.trigger('test', {name: this.name, isValid: false});
+      }
     },
     isValid: function() {
+      this.test();
       return this.errors.length === 0;
     },
     test: function() {
@@ -187,10 +209,10 @@
           return value.length <= requirement ? true : false;
         },
         greater: function(requirement) {
-          return value > requirement ? true : false;
+          return value > requirement || value === '' ? true : false;
         },
         lower: function(requirement) {
-          return value < requirement ? true : false;
+          return value < requirement || value === '' ? true : false;
         },
         equalField: function(requirement) {
           var matchField = _this.elements.form.querySelector('[name=' + requirement + ']');
@@ -204,29 +226,22 @@
         var index = this.errors.indexOf(error);
 
         if (validations[error](this.options.rules[error])) {
-          if (index > -1) this.removeError(error);
+          if (index > -1) this.errors.splice(index, 1);
         } else {
-          if (index === -1) this.addError(error);
+          if (index === -1) this.errors.push(error);;
         }
       }
 
       this.trigger('test', {name: this.name, isValid: this.errors.length === 0});
     },
-    removeError: function(error) {
-      var index = this.errors.indexOf(error);
-      this.errors.splice(index, 1);
-
-      if (this.errors.length === 0)
+    feedback: function() {
+      if (this.errors.length === 0) {
         this.elements.message.style.display = 'none';
-      else
+      } else {
+        var error = this.errors[0];
+        this.elements.message.innerHTML = this.getMessage(error);
         this.elements.message.style.display = 'block';
-    },
-    addError: function(error) {
-      var index = this.errors.indexOf(error);
-      this.errors.push(error);
-
-      this.elements.message.innerHTML = this.getMessage(error);
-      this.elements.message.style.display = 'block';
+      }
     },
     getMessage: function(error) {
       return this.form.messages[error](this.options.rules[error]);

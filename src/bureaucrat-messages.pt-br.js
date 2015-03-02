@@ -1,4 +1,4 @@
-var FormMessages = {
+var BureaucratMessages = {
   required: function() {
     return 'não pode ficar em branco';
   },
