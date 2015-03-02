@@ -16,6 +16,7 @@
     };
 
     this.fields = [];
+    this.errors = [];
 
     this.options = {
       formSelector: this.elements.form.getAttribute('data-form-selector') || '.js-bureaucrat-form',
@@ -35,7 +36,7 @@
       var fields = this.elements.form.querySelectorAll(this.options.fieldSelector);
 
       for (var i = 0; i < fields.length; i++) {
-        this.fields.push(new Field(fields[i]));
+        this.fields.push(new Field(this.elements.form, fields[i]));
       }
 
       var triggers = {
@@ -71,6 +72,25 @@
       };
 
       triggers[this.options.trigger]();
+
+      this.elements.form.addEventListener('test', function(e) {
+        var keys = Object.keys(e.detail);
+
+        for (var i = 0; i < keys.length; i++) {
+          var index = _this.errors.indexOf(keys[i]);
+
+          if (e.detail[keys[i]].length > 0) {
+            if (index === -1) _this.errors.push(keys[i]);
+          } else {
+            if (index > -1) _this.errors.splice(index, 1);
+          }
+        }
+
+        if (_this.errors.length === 0)
+          _this.enableSubmit();
+        else
+          _this.disableSubmit();
+      });
     },
     destroy: function() {
       var _this = this;
@@ -90,10 +110,10 @@
       triggers[this.options.trigger]();
     },
     enableSubmit: function() {
-      this.elements.submit.setAttribute('disabled', false);
+      this.elements.submit.removeAttribute('disabled');
     },
     disableSubmit: function() {
-      this.elements.submit.setAttribute('disabled', true);
+      this.elements.submit.setAttribute('disabled');
     },
     testOne: function(field) {
       field.test();
@@ -103,8 +123,9 @@
     }
   };
 
-  var Field = function(element) {
+  var Field = function(form, element) {
     this.elements = {
+      form: form,
       field: element
     };
 
@@ -112,6 +133,8 @@
       wrapperClass: this.elements.field.getAttribute('data-wrapper-class') || '',
       rules: JSON.parse(this.elements.field.getAttribute('data-rules')) || {}
     };
+
+    this.name = this.elements.field.getAttribute('name');
 
     this.errors = [];
 
@@ -132,15 +155,12 @@
       return wrapper;
     },
     isValid: function() {
-      this.errors.length === 0
+      return this.errors.length === 0;
     },
     test: function() {
-      var _this = this;
       var value = this.elements.field.value;
 
-      this.errors = [];
-
-      var rules = {
+      var validations = {
         required: function(requirement) {
           return value !== '' && value !== undefined && value !== null ? true : false;
         }
@@ -149,8 +169,30 @@
       var keys = Object.keys(this.options.rules);
 
       for (var i = 0; i < keys.length; i++) {
-        console.log(keys[i], rules[keys[i]](this.options.rules[keys[i]]));
+        var index = this.errors.indexOf(keys[i]);
+
+        if (validations[keys[i]](this.options.rules[keys[i]])) {
+          if (index > -1) this.errors.splice(index, 1);
+        } else {
+          if (index === -1) this.errors.push(keys[i]);
+        }
       }
+
+      var name = this.name;
+
+      this.trigger('test', {name: this.errors});
+    },
+    trigger: function(name, data) {
+      if (!data) data = {}
+
+      if (window.CustomEvent) {
+        var event = new CustomEvent(name, {detail: data});
+      } else {
+        var event = document.createEvent('CustomEvent');
+        event.initCustomEvent(name, true, true, data);
+      }
+
+      this.elements.form.dispatchEvent(event);
     }
   };
 
