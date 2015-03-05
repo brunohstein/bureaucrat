@@ -202,21 +202,65 @@
         required: function(requirement) {
           return value !== '' && value !== undefined && value !== null ? true : false;
         },
-        minlength: function(requirement) {
+        minLength: function(requirement) {
           return value.length >= requirement ? true : false;
         },
-        maxlength: function(requirement) {
+        maxLength: function(requirement) {
           return value.length <= requirement ? true : false;
         },
         greater: function(requirement) {
           return value > requirement || value === '' ? true : false;
         },
+        greaterOrEqual: function(requirement) {
+          return value >= requirement || value === '' ? true : false;
+        },
         lower: function(requirement) {
           return value < requirement || value === '' ? true : false;
+        },
+        lowerOrEqual: function(requirement) {
+          return value <= requirement || value === '' ? true : false;
         },
         equalField: function(requirement) {
           var matchField = _this.elements.form.querySelector('[name=' + requirement + ']');
           return matchField.value === value ? true : false;
+        },
+        pattern: function(requirement) {
+          var regex;
+
+          switch (requirement) {
+            case 'fullName':
+              regex = /^[A-z]([-']?[A-z]+)*( [A-z]([-']?[A-z]+)*)+$/;
+              break;
+            case 'email':
+              regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+              break;
+            case 'number':
+              regex = /^\d+$/;
+              break;
+            case 'cep':
+              regex = /^[0-9]{5}-[0-9]{3}$/;
+              break;
+            case 'cepNumbers':
+              regex = /^[0-9]{8}$/;
+              break;
+            case 'cpf':
+              regex = /^\d{3}\.\d{3}\.\d{3}\-\d{2}$/;
+              break;
+            case 'cpfNumbers':
+              regex = /^\d{11}$/;
+              break;
+            case 'cnpj':
+              regex = /^\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}$/;
+              break;
+            case 'cnpjNumbers':
+              regex = /^\d{14}$/;
+              break;
+            case 'url':
+              regex = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+              break;
+          }
+
+          return regex.test(value) || value === '' ? true : false;
         }
       };
 
