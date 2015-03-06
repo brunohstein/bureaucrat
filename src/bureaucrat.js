@@ -11,19 +11,20 @@
   'use strict';
 
   var Form = function(element) {
-    this.messages = BureaucratMessages;
-
     this.elements = {
       form: element
     };
 
+    this.messages = BureaucratMessages;
     this.fields = [];
     this.errors = [];
 
     this.options = {
-      formSelector: this.elements.form.getAttribute('data-form-selector') || '.js-bureaucrat-form',
       fieldSelector: this.elements.form.getAttribute('data-field-selector') || '.js-bureaucrat-field',
       submitSelector: this.elements.form.getAttribute('data-submit-selector') || '.js-bureaucrat-submit',
+      messageClass: this.elements.form.getAttribute('data-message-class') || '',
+      wrapperClass: this.elements.form.getAttribute('data-wrapper-class') || '',
+      errorClass: this.elements.form.getAttribute('data-error-class') || '',
       trigger: this.elements.form.getAttribute('data-trigger') || 'submit'
     };
 
@@ -162,7 +163,6 @@
 
     this.options = {
       wrapperClass: this.elements.field.getAttribute('data-wrapper-class') || '',
-      messageClass: this.elements.field.getAttribute('data-message-class') || '',
       rules: JSON.parse(this.elements.field.getAttribute('data-rules')) || {}
     };
 
@@ -177,11 +177,11 @@
     init: function() {
       this.elements.wrapper = document.createElement('div');
       this.elements.wrapper.appendChild(this.elements.field.parentNode.replaceChild(this.elements.wrapper, this.elements.field));
-      this.elements.wrapper.className = this.options.wrapperClass;
+      this.elements.wrapper.className = this.options.wrapperClass + ' ' + this.form.options.wrapperClass;
 
       this.elements.message = document.createElement('div');
       this.elements.message.style.display = 'none';
-      this.elements.message.className = this.options.messageClass;
+      this.elements.message.className = this.form.options.messageClass;
 
       this.elements.wrapper.appendChild(this.elements.message);
 
@@ -281,10 +281,18 @@
     feedback: function() {
       if (this.errors.length === 0) {
         this.elements.message.style.display = 'none';
+        if (this.elements.wrapper.classList)
+          this.elements.wrapper.classList.remove(this.form.options.errorClass);
+        else
+          this.elements.wrapper.className = this.elements.wrapper.className.replace(new RegExp('(^|\\b)' + this.form.options.errorClass.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
       } else {
         var error = this.errors[0];
         this.elements.message.innerHTML = this.getMessage(error);
         this.elements.message.style.display = 'block';
+        if (this.elements.wrapper.classList)
+          this.elements.wrapper.classList.add(this.form.options.errorClass);
+        else
+          this.elements.wrapper.className += ' ' + this.form.options.errorClass;
       }
     },
     getMessage: function(error) {

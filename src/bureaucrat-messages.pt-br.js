@@ -36,18 +36,18 @@ var BureaucratMessages = {
         break;
       case 'cep':
       case 'cepNumbers':
-        return "não é um cep válido";
+        return "não é um CEP válido";
         break;
       case 'cpf':
       case 'cpfNumbers':
-        return "não é um cpf válido";
+        return "não é um CPF válido";
         break;
       case 'cnpj':
       case 'cnpjNumbers':
-        return "não é um cnpj válido";
+        return "não é um CNPJ válido";
         break;
       case 'url':
-        return "não é uma url válida";
+        return "não é uma URL válida";
         break;
     }
   }

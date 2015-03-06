@@ -6,20 +6,50 @@
   <link rel="stylesheet" href="stylesheets/index.css">
 </head>
 <body>
-  <form class="js-bureaucrat-form" data-trigger="live">
-    <input class="js-bureaucrat-field" name="name" type="text" data-rules='{"required": "true", "minLength": 6, "pattern": "fullName"}' placeholder="name">
-    <input class="js-bureaucrat-field" name="age" type="number" data-rules='{"greaterOrEqual": 18, "lower": 60}' placeholder="age">
-    <input class="js-bureaucrat-field" name="email" type="email" data-rules='{"required": "true", "minLength": 6, "pattern": "email"}' placeholder="email">
-    <input class="js-bureaucrat-field" name="repeat_email" type="email" data-rules='{"required": "true", "equalField": "email"}' placeholder="repeat email">
-    <button class="js-bureaucrat-submit" type="submit" disabled>submit</button>
+  <form class="form js-bureaucrat-form" data-trigger="live" data-message-class="form__message" data-error-class="has-error" data-wrapper-class="form__wrapper">
+    <span class="form__title">live</span>
+
+    <input class="form__field js-bureaucrat-field" name="name" type="text" placeholder="name" data-rules='{"required": "true", "minLength": 6, "pattern": "fullName"}'>
+    <input class="form__field js-bureaucrat-field" name="age" type="number" placeholder="age" data-rules='{"greaterOrEqual": 18, "lower": 60}'>
+    <input class="form__field js-bureaucrat-field" name="email" type="email" placeholder="email" data-rules='{"required": "true", "minLength": 6, "pattern": "email"}'>
+    <input class="form__field js-bureaucrat-field" name="repeat_email" type="email" placeholder="repeat email" data-rules='{"required": "true", "equalField": "email"}'>
+    <input class="form__field js-bureaucrat-field" name="url" type="text" placeholder="web page" data-rules='{"pattern": "url"}'>
+
+    <button class="form__submit js-bureaucrat-submit" type="submit" disabled>submit</button>
+  </form>
+
+  <form class="form js-bureaucrat-form" data-trigger="blur" data-message-class="form__message" data-error-class="has-error" data-wrapper-class="form__wrapper">
+    <span class="form__title">blur</span>
+
+    <input class="form__field js-bureaucrat-field" name="name" type="text" placeholder="name" data-rules='{"required": "true", "minLength": 6, "pattern": "fullName"}'>
+    <input class="form__field js-bureaucrat-field" name="age" type="number" placeholder="age" data-rules='{"greaterOrEqual": 18, "lower": 60}'>
+    <input class="form__field js-bureaucrat-field" name="email" type="email" placeholder="email" data-rules='{"required": "true", "minLength": 6, "pattern": "email"}'>
+    <input class="form__field js-bureaucrat-field" name="repeat_email" type="email" placeholder="repeat email" data-rules='{"required": "true", "equalField": "email"}'>
+    <input class="form__field js-bureaucrat-field" name="url" type="text" placeholder="web page" data-rules='{"pattern": "url"}'>
+
+    <button class="form__submit js-bureaucrat-submit" type="submit" disabled>submit</button>
+  </form>
+
+  <form class="form js-bureaucrat-form" data-trigger="submit" data-message-class="form__message" data-error-class="has-error" data-wrapper-class="form__wrapper">
+    <span class="form__title">submit</span>
+
+    <input class="form__field js-bureaucrat-field" name="name" type="text" placeholder="name" data-rules='{"required": "true", "minLength": 6, "pattern": "fullName"}'>
+    <input class="form__field js-bureaucrat-field" name="age" type="number" placeholder="age" data-rules='{"greaterOrEqual": 18, "lower": 60}'>
+    <input class="form__field js-bureaucrat-field" name="email" type="email" placeholder="email" data-rules='{"required": "true", "minLength": 6, "pattern": "email"}'>
+    <input class="form__field js-bureaucrat-field" name="repeat_email" type="email" placeholder="repeat email" data-rules='{"required": "true", "equalField": "email"}'>
+    <input class="form__field js-bureaucrat-field" name="url" type="text" placeholder="web page" data-rules='{"pattern": "url"}'>
+
+    <button class="form__submit js-bureaucrat-submit" type="submit">submit</button>
   </form>
 
   <script src="../src/bureaucrat-messages.pt-br.js"></script>
   <script src="../src/bureaucrat.js"></script>
   <script>
-    var form = document.querySelector('.js-bureaucrat-form');
-    var bureaucrat = new Bureaucrat(form);
-    console.log('instance', bureaucrat);
+    var forms = document.querySelectorAll('.js-bureaucrat-form');
+
+    for (var i = 0; i < forms.length; i++) {
+      new Bureaucrat(forms[i]);
+    }
   </script>
 </body>
 </html>

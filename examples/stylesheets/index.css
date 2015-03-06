@@ -1,3 +1,118 @@
-button:disabled {
-  opacity: 0.25;
+body {
+  padding: 175px 0;
+  text-align: center;
 }
+
+.form {
+  width: 25%;
+  padding: 0 3%;
+  display: inline-block;
+
+  vertical-align: top;
+}
+
+  .form__title {
+    display: block;
+    padding: 10px;
+
+    font: 14px sans-serif;
+    text-transform: uppercase;
+    color: #333333;
+  }
+
+  .form__wrapper {
+    margin: 10px 0;
+    position: relative;
+  }
+
+  .form__wrapper.has-error .form__field {
+    border-color: #ff6600;
+  }
+
+  .form__wrapper.has-error:hover .form__message {
+    margin-bottom: 20px;
+
+    opacity: 1;
+
+    transition: opacity 0.25s ease 0.05s,
+                margin 0.25s ease 0s;
+  }
+
+    .form__field {
+      height: 40px;
+      width: 100%;
+      padding: 0 12px;
+      box-sizing: border-box;
+
+      border-radius: 3px;
+      border: 1px solid #cccccc;
+      outline: 0;
+      box-shadow: 0 0 0;
+
+      font: 12px sans-serif;
+      text-transform: uppercase;
+
+      transition: border 0.25s ease 0s;
+    }
+
+    .form__message {
+      width: 250px;
+      padding: 10px 12px;
+      box-sizing: border-box;
+
+      position: absolute;
+      z-index: 2;
+      bottom: 100%;
+      left: 50%;
+      margin: 0 0 0 -125px;
+
+      background: #ff6600;
+      opacity: 0;
+      pointer-events: none;
+
+      font: 11px/15px sans-serif;
+      text-transform: uppercase;
+      color: #ffffff;
+      text-align: center;
+
+      transition: opacity 0.25s ease 0s,
+                  margin 0.25s ease 0.05s;
+    }
+
+    .form__message::after {
+      content: '';
+
+      height: 0;
+      width: 0;
+
+      top: 100%;
+      left: 50%;
+      position: absolute;
+      margin-left: -8px;
+
+      border: solid transparent;
+      pointer-events: none;
+      border-color: rgba(255, 102, 0, 0);
+      border-top-color: #ff6600;
+      border-width: 8px;
+    }
+
+  .form__submit {
+    width: 100%;
+    height: 40px;
+
+    border-radius: 3px;
+    background: #cccccc;
+    box-shadow: 0 0 0;
+    border: 0;
+
+    font: 12px sans-serif;
+    text-transform: uppercase;
+    color: #333333;
+
+    transition: opacity 0.25s ease 0s;
+  }
+
+  .form__submit:disabled {
+    opacity: 0.25;
+  }
