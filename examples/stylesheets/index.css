@@ -50,7 +50,6 @@ body {
       box-shadow: 0 0 0;
 
       font: 12px sans-serif;
-      text-transform: capitalize;
 
       transition: border 0.25s ease 0s;
     }
@@ -108,7 +107,6 @@ body {
     cursor: pointer;
 
     font: 12px sans-serif;
-    text-transform: capitalize;
     color: #333333;
 
     transition: opacity 0.25s ease 0s;

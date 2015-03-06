@@ -79,23 +79,11 @@
             _this.fields[i].elements.field.addEventListener('keyup', function(e) {
               if (e.keyCode == 9) e.preventDefault();
 
-              var field;
-
-              _this.fields.some(function(object) {
-                if (object.name === e.target.getAttribute('name')) field = object;
-              });
-
-              _this.testOne(field);
+              _this.testOne(_this.findField(e.target.getAttribute('name')));
             });
 
             _this.fields[i].elements.field.addEventListener('change', function(e) {
-              var field;
-
-              _this.fields.some(function(object) {
-                if (object.name === e.target.getAttribute('name')) field = object;
-              });
-
-              _this.testOne(field);
+              _this.testOne(_this.findField(e.target.getAttribute('name')));
             });
           }
 
@@ -106,6 +94,15 @@
       };
 
       triggers[this.options.trigger]();
+    },
+    findField: function(name) {
+      var field;
+
+      this.fields.some(function(object) {
+        if (object.name === name) field = object;
+      });
+
+      return field;
     },
     destroy: function() {
       var _this = this;
