@@ -105,6 +105,7 @@ body {
     background: #cccccc;
     box-shadow: 0 0 0;
     border: 0;
+    cursor: pointer;
 
     font: 12px sans-serif;
     text-transform: capitalize;
@@ -115,4 +116,5 @@ body {
 
   .form__submit:disabled {
     opacity: 0.25;
+    cursor: default;
   }

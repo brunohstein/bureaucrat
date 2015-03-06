@@ -161,7 +161,8 @@
 
     this.options = {
       wrapperClass: this.elements.field.getAttribute('data-wrapper-class') || '',
-      rules: JSON.parse(this.elements.field.getAttribute('data-rules')) || {}
+      rules: JSON.parse(this.elements.field.getAttribute('data-rules')) || {},
+      validKeys: this.elements.field.getAttribute('data-valid-keys') || false,
     };
 
     this.name = this.elements.field.getAttribute('name');
@@ -173,6 +174,8 @@
 
   Field.prototype = {
     init: function() {
+      var _this = this;
+
       this.elements.wrapper = document.createElement('div');
       this.elements.wrapper.appendChild(this.elements.field.parentNode.replaceChild(this.elements.wrapper, this.elements.field));
       this.elements.wrapper.className = this.options.wrapperClass + ' ' + this.form.options.wrapperClass;
@@ -183,9 +186,26 @@
 
       this.elements.wrapper.appendChild(this.elements.message);
 
+      this.elements.field.addEventListener('keydown', function(e) {
+        if (!_this.isValidKey(e)) e.preventDefault();
+      });
+
       if (this.options.rules.required) {
         this.errors.push('required');
         this.trigger('test', {name: this.name, isValid: false});
+      }
+    },
+    isValidKey: function(e) {
+      var freeKeys = [8, 9, 13, 16, 17, 18, 19, 20, 27, 33, 34, 35, 36, 37, 38, 39, 40, 45, 46, 91, 92, 144, 145];
+
+      if (!this.options.validKeys) return true;
+      if (e.metaKey) return true;
+      if (freeKeys.indexOf(e.keyCode) > -1) return true;
+
+      switch (this.options.validKeys) {
+        case 'numbers':
+          return (!e.shiftKey && ((e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 96 && e.keyCode <= 105))) ? true : false;
+          break;
       }
     },
     isValid: function() {
