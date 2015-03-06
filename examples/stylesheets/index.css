@@ -15,7 +15,7 @@ body {
     display: block;
     padding: 10px;
 
-    font: 14px sans-serif;
+    font: 12px sans-serif;
     text-transform: uppercase;
     color: #333333;
   }
@@ -50,7 +50,7 @@ body {
       box-shadow: 0 0 0;
 
       font: 12px sans-serif;
-      text-transform: uppercase;
+      text-transform: capitalize;
 
       transition: border 0.25s ease 0s;
     }
@@ -107,7 +107,7 @@ body {
     border: 0;
 
     font: 12px sans-serif;
-    text-transform: uppercase;
+    text-transform: capitalize;
     color: #333333;
 
     transition: opacity 0.25s ease 0s;

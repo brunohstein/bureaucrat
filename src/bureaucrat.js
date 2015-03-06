@@ -20,15 +20,13 @@
     this.errors = [];
 
     this.options = {
-      fieldSelector: this.elements.form.getAttribute('data-field-selector') || '.js-bureaucrat-field',
-      submitSelector: this.elements.form.getAttribute('data-submit-selector') || '.js-bureaucrat-submit',
-      messageClass: this.elements.form.getAttribute('data-message-class') || '',
       wrapperClass: this.elements.form.getAttribute('data-wrapper-class') || '',
+      messageClass: this.elements.form.getAttribute('data-message-class') || '',
       errorClass: this.elements.form.getAttribute('data-error-class') || '',
       trigger: this.elements.form.getAttribute('data-trigger') || 'submit'
     };
 
-    this.elements.submit = this.elements.form.querySelector(this.options.submitSelector);
+    this.elements.submit = this.elements.form.querySelector('[type="submit"]');
 
     this.init();
   };
@@ -36,7 +34,7 @@
   Form.prototype = {
     init: function() {
       var _this = this;
-      var fields = this.elements.form.querySelectorAll(this.options.fieldSelector);
+      var fields = this.elements.form.querySelectorAll('[name]');
 
       this.elements.form.addEventListener('test', function(e) {
         var index = _this.errors.indexOf(e.detail.name);
@@ -200,7 +198,18 @@
 
       var validations = {
         required: function(requirement) {
-          return value !== '' && value !== undefined && value !== null ? true : false;
+          if (_this.elements.field.type && (_this.elements.field.type === 'checkbox' || _this.elements.field.type === 'radio')) {
+            var isFilled = false;
+            var fields = _this.form.elements.form.querySelectorAll('[name="' + _this.name + '"]');
+
+            for (var i = 0; i < fields.length; i++) {
+              if (fields[i].checked) isFilled = true;
+            }
+
+            return isFilled;
+          } else {
+            return value !== '' && value !== undefined && value !== null ? true : false;
+          }
         },
         minLength: function(requirement) {
           return value.length >= requirement ? true : false;
