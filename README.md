@@ -57,10 +57,10 @@ Fields accept the following options through `data-attributes`:
 
     <small>Example: `<input type="text" name="url" data-rules='{ "required": "true", "minLength": "10", "pattern": "url" }'>`</small>
 
-- `valid-keys` _string_ **(optional)** limit the type of input allowed
+- `valid-keys` _string_ **(optional)** limit the type of input allowed.
 
     <small>Example: `<input type="text" name="age" data-valid-keys="numbers">`</small>
 
-- `wrapper-class` _string_ **(optional)** add a class to the wrapper of this specific field
+- `wrapper-class` _string_ **(optional)** add a class to the wrapper of this specific field.
 
     <small>Example: `<input type="text" name="birthday" data-wrapper-class="form__wrapper--small">`</small>
