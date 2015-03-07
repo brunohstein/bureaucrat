@@ -19,6 +19,8 @@ var form = document.querySelector('form');
 var bureaucrat = new Bureaucrat(form);
 ```
 
+#### Form
+
 The `<form>` element accepts the following options through `data-attributes`:
 
 - `trigger` _string_ **(required)** defines when the fields will be tested:
@@ -40,6 +42,8 @@ The `<form>` element accepts the following options through `data-attributes`:
 - `wrapper-class` _string_ **(optional)** set the class of all the wrappers.
 
     <small>Example: `<form data-wrapper-class="form__wrapper"></form>`</small>
+
+#### Fields
 
 Fields accept the following options through `data-attributes`:
 
@@ -68,3 +72,11 @@ Fields accept the following options through `data-attributes`:
 - `start-error` _string_ **(optional)** load the field with a custom error message.
 
     <small>Example: `<input type="text" name="username" data-start-error="Username is already taken.">`</small>
+
+### Gotchas
+
+- You can use labels wrapping the fields with it.
+
+    <small>Example: `<label>Name <input type="text" name="name"></label>`</small>
+
+- It makes sense to set the submit button initial state as `disabled` when the form is being triggered on `blur` or `live`. When triggering on `submit`, submit button must be always enabled.
