@@ -178,9 +178,11 @@
   Field.prototype = {
     init: function() {
       var _this = this;
+      var wrappedContent;
 
+      this.elements.field.parentNode.tagName === 'LABEL' ? wrappedContent = this.elements.field.parentNode : wrappedContent = this.elements.field;
       this.elements.wrapper = document.createElement('div');
-      this.elements.wrapper.appendChild(this.elements.field.parentNode.replaceChild(this.elements.wrapper, this.elements.field));
+      this.elements.wrapper.appendChild(wrappedContent.parentNode.replaceChild(this.elements.wrapper, wrappedContent));
       this.elements.wrapper.className = this.options.wrapperClass + ' ' + this.form.options.wrapperClass;
 
       this.elements.message = document.createElement('div');
