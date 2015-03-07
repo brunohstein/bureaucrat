@@ -1,7 +1,7 @@
 {
   "name": "bureaucrat",
   "version": "1.0.0",
-  "description": "Easy form validation.",
+  "description": "Client-side form validation.",
   "main": "src/bureaucrat.js",
   "keywords": [
     "form",
