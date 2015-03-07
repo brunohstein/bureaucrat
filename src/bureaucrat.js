@@ -165,6 +165,7 @@
       wrapperClass: this.elements.field.getAttribute('data-wrapper-class') || '',
       rules: JSON.parse(this.elements.field.getAttribute('data-rules')) || {},
       validKeys: this.elements.field.getAttribute('data-valid-keys') || false,
+      startError: this.elements.field.getAttribute('data-start-error') || false
     };
 
     this.name = this.elements.field.getAttribute('name');
@@ -194,6 +195,12 @@
 
       if (this.options.rules.required) {
         this.errors.push('required');
+        this.trigger('test', {name: this.name, isValid: false});
+      }
+
+      if (this.options.startError) {
+        this.errors.push('custom');
+        this.feedback(this.options.startError);
         this.trigger('test', {name: this.name, isValid: false});
       }
     },
@@ -309,22 +316,36 @@
 
       this.trigger('test', {name: this.name, isValid: this.errors.length === 0});
     },
-    feedback: function() {
-      if (this.errors.length === 0) {
-        this.elements.message.style.display = 'none';
-        if (this.elements.wrapper.classList)
-          this.elements.wrapper.classList.remove(this.form.options.errorClass);
-        else
-          this.elements.wrapper.className = this.elements.wrapper.className.replace(new RegExp('(^|\\b)' + this.form.options.errorClass.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+    feedback: function(customError) {
+      if (customError) {
+        this.elements.message.innerHTML = customError;
+        this.showMessage();
       } else {
-        var error = this.errors[0];
-        this.elements.message.innerHTML = this.getMessage(error);
-        this.elements.message.style.display = 'block';
-        if (this.elements.wrapper.classList)
-          this.elements.wrapper.classList.add(this.form.options.errorClass);
-        else
-          this.elements.wrapper.className += ' ' + this.form.options.errorClass;
+        var customErrorIndex = this.errors.indexOf('custom');
+        if (customErrorIndex > -1) this.errors.splice(customErrorIndex, 1);
+
+        if (this.errors.length === 0) {
+          this.hideMessage();
+        } else {
+          var error = this.errors[0];
+          this.elements.message.innerHTML = this.getMessage(error);
+          this.showMessage();
+        }
       }
+    },
+    showMessage: function() {
+      this.elements.message.style.display = 'block';
+      if (this.elements.wrapper.classList)
+        this.elements.wrapper.classList.add(this.form.options.errorClass);
+      else
+        this.elements.wrapper.className += ' ' + this.form.options.errorClass;
+    },
+    hideMessage: function() {
+      this.elements.message.style.display = 'none';
+      if (this.elements.wrapper.classList)
+        this.elements.wrapper.classList.remove(this.form.options.errorClass);
+      else
+        this.elements.wrapper.className = this.elements.wrapper.className.replace(new RegExp('(^|\\b)' + this.form.options.errorClass.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
     },
     getMessage: function(error) {
       return this.form.messages[error](this.options.rules[error]);

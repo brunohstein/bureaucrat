@@ -64,3 +64,7 @@ Fields accept the following options through `data-attributes`:
 - `wrapper-class` _string_ **(optional)** add a class to the wrapper of this specific field.
 
     <small>Example: `<input type="text" name="birthday" data-wrapper-class="form__wrapper--small">`</small>
+
+- `start-error` _string_ **(optional)** load the field with a custom error message.
+
+    <small>Example: `<input type="text" name="username" data-start-error="Username is already taken.">`</small>
