@@ -1,3 +1,8 @@
+/*
+  Written by Bruno Henrique Stein
+  http://github.com/brunohstein/bureaucrat
+*/
+
 (function(global, bureaucrat) {
   'use strict';
 
