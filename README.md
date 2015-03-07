@@ -10,7 +10,7 @@ Download and import `src/bureaucrat.js` and `src/bureaucrat-messages.your-langua
 
 ### How it works
 
-Demo: http://brunohstein.github.io/examples/index.html
+Demo: http://brunohstein.github.io/bureaucrat/examples/index.html
 
 Initiate Bureaucrat passing a `<form>` element to it as a parameter.
 
