@@ -265,42 +265,34 @@
           return matchField.value === value ? true : false;
         },
         pattern: function(requirement) {
-          var regex;
+          var patterns = {
+            fullName: function() {
+              return /^[A-z]([-']?[A-z]+)*( [A-z]([-']?[A-z]+)*)+$/;
+            },
+            email: function() {
+              return /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            },
+            number: function() {
+              return /^\d+$/;
+            },
+            zipcodeUS: function() {
+              return /^\d{5}([\-]?\d{4})?$/;
+            },
+            zipcodeBR: function() {
+              return /^[0-9]{5}-?[0-9]{3}$/;
+            },
+            cpf: function() {
+              return /^\d{3}\.?\d{3}\.?\d{3}\-?\d{2}$/;
+            },
+            cnpj: function() {
+              return /^\d{2}\.?\d{3}\.?\d{3}\/?\d{4}\-?\d{2}$/;
+            },
+            url: function() {
+            return /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+            }
+          };
 
-          switch (requirement) {
-            case 'fullName':
-              regex = /^[A-z]([-']?[A-z]+)*( [A-z]([-']?[A-z]+)*)+$/;
-              break;
-            case 'email':
-              regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-              break;
-            case 'number':
-              regex = /^\d+$/;
-              break;
-            case 'cep':
-              regex = /^[0-9]{5}-[0-9]{3}$/;
-              break;
-            case 'cepNumbers':
-              regex = /^[0-9]{8}$/;
-              break;
-            case 'cpf':
-              regex = /^\d{3}\.\d{3}\.\d{3}\-\d{2}$/;
-              break;
-            case 'cpfNumbers':
-              regex = /^\d{11}$/;
-              break;
-            case 'cnpj':
-              regex = /^\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}$/;
-              break;
-            case 'cnpjNumbers':
-              regex = /^\d{14}$/;
-              break;
-            case 'url':
-              regex = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
-              break;
-          }
-
-          return regex.test(value) || value === '' ? true : false;
+          return patterns[requirement]().test(value) || value === '' ? true : false;
         }
       };
 
@@ -350,7 +342,9 @@
         this.elements.wrapper.className = this.elements.wrapper.className.replace(new RegExp('(^|\\b)' + this.form.options.errorClass.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
     },
     getMessage: function(error) {
-      return this.form.messages[error](this.options.rules[error]);
+      var message = (this.options.rules[error].slice(0, -2) === 'zipcode') ? 'zipcode' : this.options.rules[error];
+
+      return this.form.messages[error](message);
     },
     trigger: function(name, data) {
       if (!data) data = {}
