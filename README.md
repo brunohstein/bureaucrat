@@ -80,3 +80,7 @@ Fields accept the following options through `data-attributes`:
     <small>Example: `<label>Name <input type="text" name="name"></label>`</small>
 
 - It makes sense to set the submit button initial state as `disabled` when the form is being triggered on `blur` or `live`. When triggering on `submit`, submit button must be always enabled.
+
+- You should use single quotes to wrap the JSON in the `data-rules` option. That is the case because the keys and the values must be wrapped in double quotes.
+
+    <small>Example: `<input type="text" name="name" data-rules='{"minLength": "10"}'>`</small>
