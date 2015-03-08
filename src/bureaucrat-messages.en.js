@@ -15,5 +15,6 @@ var BureaucratMessages = {
     case 'cpf':      return "is not a valid CPF"; break;
     case 'cnpj':     return "is not a valid CNPJ"; break;
     case 'url':      return "is not a valid URL"; break;
+    case 'date':     return "is not a valid date"; break;
   }}
 }

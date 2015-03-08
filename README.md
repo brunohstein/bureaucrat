@@ -56,8 +56,8 @@ Fields accept the following options through `data-attributes`:
     - `greaterOrEqual` _number_
     - `lower` _number_
     - `lowerOrEqual` _number_
-    - `equalField` _string_
-    - `pattern` _string_
+    - `equalField` _string_: name of the field to test match
+    - `pattern` _string_: `fullName`, `email`, `url`, `date`, `zipcodeUS`, `zipcodeBR`, `cpf`, `cnpj`
 
     <small>Example: `<input type="text" name="url" data-rules='{ "required": "true", "minLength": "10", "pattern": "url" }'>`</small>
 
@@ -84,3 +84,5 @@ Fields accept the following options through `data-attributes`:
 - You should use single quotes to wrap the JSON in the `data-rules` option. That is the case because the keys and the values must be wrapped in double quotes.
 
     <small>Example: `<input type="text" name="name" data-rules='{"minLength": "10"}'>`</small>
+
+- When comparing a date with `greater`, `greaterOrEqual`, `lower` or `lowerOrEqual` the date format must be YYYY-MM-DD.

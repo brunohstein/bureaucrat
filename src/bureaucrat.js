@@ -249,15 +249,43 @@
           return value.length <= requirement ? true : false;
         },
         greater: function(requirement) {
+          if (_this.elements.field.type && (_this.elements.field.type === 'date' || _this.elements.field.type === 'month')) {
+            var requirement = requirement.split('-');
+            requirement = new Date(requirement[0], requirement[1] - 1, requirement[2]);
+            value = value.split('-');
+            value = new Date(value[0], value[1] - 1, value[2]);
+          }
+
           return value > requirement || value === '' ? true : false;
         },
         greaterOrEqual: function(requirement) {
+          if (_this.elements.field.type && (_this.elements.field.type === 'date' || _this.elements.field.type === 'month')) {
+            var requirement = requirement.split('-');
+            requirement = new Date(requirement[0], requirement[1] - 1, requirement[2]);
+            value = value.split('-');
+            value = new Date(value[0], value[1] - 1, value[2]);
+          }
+
           return value >= requirement || value === '' ? true : false;
         },
         lower: function(requirement) {
+          if (_this.elements.field.type && (_this.elements.field.type === 'date' || _this.elements.field.type === 'month')) {
+            var requirement = requirement.split('-');
+            requirement = new Date(requirement[0], requirement[1] - 1, requirement[2]);
+            value = value.split('-');
+            value = new Date(value[0], value[1] - 1, value[2]);
+          }
+
           return value < requirement || value === '' ? true : false;
         },
         lowerOrEqual: function(requirement) {
+          if (_this.elements.field.type && (_this.elements.field.type === 'date' || _this.elements.field.type === 'month')) {
+            var requirement = requirement.split('-');
+            requirement = new Date(requirement[0], requirement[1] - 1, requirement[2]);
+            value = value.split('-');
+            value = new Date(value[0], value[1] - 1, value[2]);
+          }
+
           return value <= requirement || value === '' ? true : false;
         },
         equalField: function(requirement) {
@@ -288,7 +316,10 @@
               return /^\d{2}\.?\d{3}\.?\d{3}\/?\d{4}\-?\d{2}$/;
             },
             url: function() {
-            return /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+              return /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+            },
+            date: function() {
+              return /^[0-9]{4}\-[0-1]{1}[0-12]{1}\-[0-1]{1}[0-12]{1}/;
             }
           };
 
@@ -342,7 +373,7 @@
         this.elements.wrapper.className = this.elements.wrapper.className.replace(new RegExp('(^|\\b)' + this.form.options.errorClass.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
     },
     getMessage: function(error) {
-      var message = (this.options.rules[error].slice(0, -2) === 'zipcode') ? 'zipcode' : this.options.rules[error];
+      var message = (this.options.rules[error].length > 2 && this.options.rules[error].slice(0, -2) === 'zipcode') ? 'zipcode' : this.options.rules[error];
 
       return this.form.messages[error](message);
     },
